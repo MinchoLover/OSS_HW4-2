@@ -283,7 +283,7 @@
                     xhr.open("DELETE", `${url}/${id}`);
                     xhr.send();
                     xhr.onload = () => {
-                        if (xhr.status === 204) {
+                        if (xhr.status === 204 || xhr.status === 200) {
                             alert("학생 데이터가 삭제되었습니다!");
                             getStudents();
                         } else {
