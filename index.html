@@ -278,8 +278,6 @@
 
             function deleteData() {
                 const id = prompt("삭제할 학생의 ID를 입력하세요:");
-                        document.getElementById(id)
-                        .value;
                 if (id) {
                     const xhr = new XMLHttpRequest();
                     xhr.open("DELETE", `${url}/${id}`);
