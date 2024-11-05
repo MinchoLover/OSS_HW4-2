@@ -89,12 +89,6 @@
       "name": "다니엘",
       "age": "24",
       "favorite_food": "돼지국밥"
-    },
-    {
-      "name": "헤미드",
-      "age": "25",
-      "favorite_food": "어죽",
-      "id": "16"
     }
   ]
 }
