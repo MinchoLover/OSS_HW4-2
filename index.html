@@ -17,26 +17,6 @@
                 color: #4a90e2;
                 text-align: center;
             }
-            .form-group {
-                display: flex;
-                align-items: center;
-                margin-bottom: 10px;
-            }
-            label {
-                width: 100px;
-                font-weight: bold;
-                margin-right: 10px;
-                color: #333;
-            }
-            input[type="text"],
-            input[type="number"] {
-                flex: 1;
-                padding: 8px;
-                margin-right: 10px;
-                box-sizing: border-box;
-                border: 1px solid #ddd;
-                border-radius: 4px;
-            }
             button {
                 background-color: #4a90e2;
                 color: white;
@@ -53,8 +33,7 @@
                 border-collapse: collapse;
                 margin-top: 20px;
             }
-            td,
-            th {
+            td, th {
                 padding: 12px;
                 text-align: left;
                 border-bottom: 1px solid #ddd;
@@ -63,27 +42,40 @@
                 background-color: #4a90e2;
                 color: white;
             }
+            /* Modal styling */
+            .modal {
+                display: none;
+                position: fixed;
+                z-index: 1;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+            }
+            .modal-content {
+                background-color: #fefefe;
+                margin: 10% auto;
+                padding: 20px;
+                border: 1px solid #888;
+                width: 300px;
+            }
+            .close {
+                color: #aaa;
+                float: right;
+                font-size: 28px;
+                font-weight: bold;
+            }
+            .close:hover,
+            .close:focus {
+                color: black;
+                text-decoration: none;
+                cursor: pointer;
+            }
         </style>
     </head>
     <body>
-
         <h2>학생 데이터 관리</h2>
-        <div class="form-group">
-            <label for="name">이름:</label>
-            <input type="text" id="name"/>
-        </div>
-        <div class="form-group">
-            <label for="age">나이:</label>
-            <input type="number" id="age"/>
-        </div>
-        <div class="form-group">
-            <label for="id">ID:</label>
-            <input type="text" id="id"/>
-        </div>
-        <div class="form-group">
-            <label for="favorite_food">좋아하는 음식:</label>
-            <input type="text" id="favorite_food"/>
-        </div>
         <button id="Get">데이터 가져오기</button>
         <button id="Add">데이터 추가하기</button>
         <button id="Update">데이터 수정하기</button>
@@ -91,22 +83,68 @@
 
         <div id="div_students"></div>
 
+        <!-- Add Modal -->
+        <div id="addModal" class="modal">
+            <div class="modal-content">
+                <span class="close" id="closeAddModal">&times;</span>
+                <h3>학생 추가</h3>
+                <label>이름:</label>
+                <input type="text" id="add_name"/><br>
+                <label>나이:</label>
+                <input type="number" id="add_age"/><br>
+                <label>ID:</label>
+                <input type="text" id="add_id"/><br>
+                <label>좋아하는 음식:</label>
+                <input type="text" id="add_favorite_food"/><br>
+                <button onclick="postData()">추가</button>
+            </div>
+        </div>
+
+        <!-- Update Modal -->
+        <div id="updateModal" class="modal">
+            <div class="modal-content">
+                <span class="close" id="closeUpdateModal">&times;</span>
+                <h3>학생 수정</h3>
+                <label>이름:</label>
+                <input type="text" id="update_name"/><br>
+                <label>나이:</label>
+                <input type="number" id="update_age"/><br>
+                <label>ID:</label>
+                <input type="text" id="update_id"/><br>
+                <label>좋아하는 음식:</label>
+                <input type="text" id="update_favorite_food"/><br>
+                <button onclick="updateData()">수정</button>
+            </div>
+        </div>
+
         <script>
             const url = "https://67281988270bd0b975545c66.mockapi.io/api/v1/students";
 
             window.onload = function () {
-                document
-                    .getElementById("Get")
-                    .addEventListener("click", getStudents);
-                document
-                    .getElementById("Add")
-                    .addEventListener("click", postData);
-                document
-                    .getElementById("Update")
-                    .addEventListener("click", updateData);
-                document
-                    .getElementById("Delete")
-                    .addEventListener("click", deleteData);
+                document.getElementById("Get").addEventListener("click", getStudents);
+                document.getElementById("Add").addEventListener("click", () => {
+                    document.getElementById("addModal").style.display = "block";
+                });
+                document.getElementById("Update").addEventListener("click", () => {
+                    document.getElementById("updateModal").style.display = "block";
+                });
+                document.getElementById("Delete").addEventListener("click", deleteData);
+
+                document.getElementById("closeAddModal").onclick = function() {
+                    document.getElementById("addModal").style.display = "none";
+                };
+                document.getElementById("closeUpdateModal").onclick = function() {
+                    document.getElementById("updateModal").style.display = "none";
+                };
+
+                window.onclick = function(event) {
+                    if (event.target == document.getElementById("addModal")) {
+                        document.getElementById("addModal").style.display = "none";
+                    }
+                    if (event.target == document.getElementById("updateModal")) {
+                        document.getElementById("updateModal").style.display = "none";
+                    }
+                };
             }
 
             function getStudents() {
@@ -118,9 +156,7 @@
                     if (xhr.status === 200) {
                         const students = JSON.parse(xhr.response);
                         const list = makeList(students);
-                        document
-                            .getElementById("div_students")
-                            .innerHTML = list;
+                        document.getElementById("div_students").innerHTML = list;
                     } else {
                         console.log(xhr.status, xhr.statusText);
                     }
@@ -143,24 +179,17 @@
                 xhr.setRequestHeader("content-type", "application/json; charset=UTF-8");
 
                 const data = {
-                    name: document
-                        .getElementById("name")
-                        .value,
-                    age: document
-                        .getElementById("age")
-                        .value,
-                    favorite_food: document
-                        .getElementById("favorite_food")
-                        .value,
-                    id: document
-                        .getElementById("id")
-                        .value
+                    name: document.getElementById("add_name").value,
+                    age: document.getElementById("add_age").value,
+                    favorite_food: document.getElementById("add_favorite_food").value,
+                    id: document.getElementById("add_id").value
                 };
 
                 xhr.send(JSON.stringify(data));
                 xhr.onload = () => {
                     if (xhr.status === 201) {
                         alert("학생이 추가되었습니다!");
+                        document.getElementById("addModal").style.display = "none";
                         getStudents();
                     } else {
                         console.log(xhr.status, xhr.statusText);
@@ -169,29 +198,22 @@
             }
 
             function updateData() {
-                const id = document
-                    .getElementById("id")
-                    .value;
+                const id = document.getElementById("update_id").value;
                 const xhr = new XMLHttpRequest();
                 xhr.open("PUT", `${url}/${id}`);
                 xhr.setRequestHeader("content-type", "application/json; charset=UTF-8");
 
                 const data = {
-                    name: document
-                        .getElementById("name")
-                        .value,
-                    age: document
-                        .getElementById("age")
-                        .value,
-                    favorite_food: document
-                        .getElementById("favorite_food")
-                        .value
+                    name: document.getElementById("update_name").value,
+                    age: document.getElementById("update_age").value,
+                    favorite_food: document.getElementById("update_favorite_food").value
                 };
 
                 xhr.send(JSON.stringify(data));
                 xhr.onload = () => {
                     if (xhr.status === 200) {
                         alert("학생 데이터가 수정되었습니다!");
+                        document.getElementById("updateModal").style.display = "none";
                         getStudents();
                     } else {
                         console.log(xhr.status, xhr.statusText);
@@ -200,18 +222,18 @@
             }
 
             function deleteData() {
-                const id = document
-                    .getElementById("id")
-                    .value;
-                const xhr = new XMLHttpRequest();
-                xhr.open("DELETE", `${url}/${id}`);
-                xhr.send();
-                xhr.onload = () => {
-                    if (xhr.status === 204) {
-                        alert("학생 데이터가 삭제되었습니다!");
-                        getStudents();
-                    } else {
-                        console.log(xhr.status, xhr.statusText);
+                const id = prompt("삭제할 학생의 ID를 입력하세요:");
+                if (id) {
+                    const xhr = new XMLHttpRequest();
+                    xhr.open("DELETE", `${url}/${id}`);
+                    xhr.send();
+                    xhr.onload = () => {
+                        if (xhr.status === 204) {
+                            alert("학생 데이터가 삭제되었습니다!");
+                            getStudents();
+                        } else {
+                            console.log(xhr.status, xhr.statusText);
+                        }
                     }
                 }
             }
