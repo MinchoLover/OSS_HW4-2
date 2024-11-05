@@ -1,0 +1,100 @@
+{
+  "students": [
+    {
+      "name": "홍홍홍",
+      "age": "92",
+      "favorite_food": "김치찜",
+      "id": "1"
+    },
+    {
+      "id": "2",
+      "name": "이몽룡",
+      "age": 30,
+      "favorite_food": "불고기"
+    },
+    {
+      "id": "3",
+      "name": "성춘향",
+      "age": 22,
+      "favorite_food": "비빔밥"
+    },
+    {
+      "id": "4",
+      "name": "장길산",
+      "age": 28,
+      "favorite_food": "떡볶이"
+    },
+    {
+      "id": "5",
+      "name": "김유신",
+      "age": 35,
+      "favorite_food": "갈비"
+    },
+    {
+      "id": "6",
+      "name": "이순신",
+      "age": 40,
+      "favorite_food": "회"
+    },
+    {
+      "id": "7",
+      "name": "신사임당",
+      "age": 45,
+      "favorite_food": "전"
+    },
+    {
+      "id": "8",
+      "name": "안중근",
+      "age": 32,
+      "favorite_food": "찜닭"
+    },
+    {
+      "id": "9",
+      "name": "윤봉길",
+      "age": 29,
+      "favorite_food": "삼겹살"
+    },
+    {
+      "id": "10",
+      "name": "유관순",
+      "age": 23,
+      "favorite_food": "순대"
+    },
+    {
+      "id": "11",
+      "name": "김태희",
+      "age": 27,
+      "favorite_food": "초밥"
+    },
+    {
+      "id": "12",
+      "name": "이병헌",
+      "age": 36,
+      "favorite_food": "파스타"
+    },
+    {
+      "id": "13",
+      "name": "정민찬",
+      "age": "21",
+      "favorite_food": "햄버거"
+    },
+    {
+      "id": "14",
+      "name": "정민초",
+      "age": "13",
+      "favorite_food": "초밥"
+    },
+    {
+      "id": "15",
+      "name": "다니엘",
+      "age": "24",
+      "favorite_food": "돼지국밥"
+    },
+    {
+      "name": "헤미드",
+      "age": "25",
+      "favorite_food": "어죽",
+      "id": "16"
+    }
+  ]
+}

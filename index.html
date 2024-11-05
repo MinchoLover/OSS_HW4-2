@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Assignment#4-1: JavaScript Practice</title>
+        <script
+            src="https://code.jquery.com/jquery-3.7.1.js"
+            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+            crossorigin="anonymous"></script>
+        <style>
+            body {
+                padding: 20px;
+            }
+            h2 {
+                color: #4a90e2;
+                text-align: center;
+            }
+            .form-group {
+                display: flex;
+                align-items: center;
+                margin-bottom: 10px;
+            }
+            label {
+                width: 100px;
+                font-weight: bold;
+                margin-right: 10px;
+                color: #333;
+            }
+            input[type="text"],
+            input[type="number"] {
+                flex: 1;
+                padding: 8px;
+                margin-right: 10px;
+                box-sizing: border-box;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+            }
+            button {
+                background-color: #4a90e2;
+                color: white;
+                border: none;
+                padding: 10px 15px;
+                font-size: 14px;
+                margin-right: 5px;
+            }
+            #div_students {
+                margin-top: 20px;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+            }
+            td,
+            th {
+                padding: 12px;
+                text-align: left;
+                border-bottom: 1px solid #ddd;
+            }
+            th {
+                background-color: #4a90e2;
+                color: white;
+            }
+        </style>
+    </head>
+    <body>
+
+        <h2>학생 데이터 관리</h2>
+        <div class="form-group">
+            <label for="name">이름:</label>
+            <input type="text" id="name"/>
+        </div>
+        <div class="form-group">
+            <label for="age">나이:</label>
+            <input type="number" id="age"/>
+        </div>
+        <div class="form-group">
+            <label for="id">ID:</label>
+            <input type="text" id="id"/>
+        </div>
+        <div class="form-group">
+            <label for="favorite_food">좋아하는 음식:</label>
+            <input type="text" id="favorite_food"/>
+        </div>
+        <button id="Get">데이터 가져오기</button>
+        <button id="Add">데이터 추가하기</button>
+        <button id="Update">데이터 수정하기</button>
+        <button id="Delete">데이터 삭제하기</button>
+
+        <div id="div_students"></div>
+
+        <script>
+            const url = "http://localhost:3000/students";
+
+            window.onload = function () {
+                document
+                    .getElementById("Get")
+                    .addEventListener("click", getStudents);
+                document
+                    .getElementById("Add")
+                    .addEventListener("click", postData);
+                document
+                    .getElementById("Update")
+                    .addEventListener("click", updateData);
+                document
+                    .getElementById("Delete")
+                    .addEventListener("click", deleteData);
+            }
+
+            function getStudents() {
+                const xhr = new XMLHttpRequest();
+                xhr.open("GET", url);
+                xhr.setRequestHeader("content-type", "application/json");
+                xhr.send();
+                xhr.onload = () => {
+                    if (xhr.status === 200) {
+                        const students = JSON.parse(xhr.response);
+                        const list = makeList(students);
+                        document
+                            .getElementById("div_students")
+                            .innerHTML = list;
+                    } else {
+                        console.log(xhr.status, xhr.statusText);
+                    }
+                }
+            }
+
+            function makeList(data) {
+                let str = "<table>";
+                str += "<tr><th>ID</th><th>이름</th><th>나이</th><th>좋아하는 음식</th></tr>";
+                data.forEach(student => {
+                    str += `<tr><td>${student.id}</td><td>${student.name}</td><td>${student.age}</td><td>${student.favorite_food}</td></tr>`;
+                });
+                str += "</table>";
+                return str;
+            }
+
+            function postData() {
+                const xhr = new XMLHttpRequest();
+                xhr.open("POST", url);
+                xhr.setRequestHeader("content-type", "application/json; charset=UTF-8");
+
+                const data = {
+                    name: document
+                        .getElementById("name")
+                        .value,
+                    age: document
+                        .getElementById("age")
+                        .value,
+                    favorite_food: document
+                        .getElementById("favorite_food")
+                        .value,
+                    id: document
+                        .getElementById("id")
+                        .value
+                };
+
+                xhr.send(JSON.stringify(data));
+                xhr.onload = () => {
+                    if (xhr.status === 201) {
+                        alert("학생이 추가되었습니다!");
+                        getStudents();
+                    } else {
+                        console.log(xhr.status, xhr.statusText);
+                    }
+                }
+            }
+
+            function updateData() {
+                const id = document
+                    .getElementById("id")
+                    .value;
+                const xhr = new XMLHttpRequest();
+                xhr.open("PUT", `${url}/${id}`);
+                xhr.setRequestHeader("content-type", "application/json; charset=UTF-8");
+
+                const data = {
+                    name: document
+                        .getElementById("name")
+                        .value,
+                    age: document
+                        .getElementById("age")
+                        .value,
+                    favorite_food: document
+                        .getElementById("favorite_food")
+                        .value
+                };
+
+                xhr.send(JSON.stringify(data));
+                xhr.onload = () => {
+                    if (xhr.status === 200) {
+                        alert("학생 데이터가 수정되었습니다!");
+                        getStudents();
+                    } else {
+                        console.log(xhr.status, xhr.statusText);
+                    }
+                }
+            }
+
+            function deleteData() {
+                const id = document
+                    .getElementById("id")
+                    .value;
+                const xhr = new XMLHttpRequest();
+                xhr.open("DELETE", `${url}/${id}`);
+                xhr.send();
+                xhr.onload = () => {
+                    if (xhr.status === 204) {
+                        alert("학생 데이터가 삭제되었습니다!");
+                        getStudents();
+                    } else {
+                        console.log(xhr.status, xhr.statusText);
+                    }
+                }
+            }
+        </script>
+    </body>
+</html>
