@@ -278,6 +278,8 @@
 
             function deleteData() {
                 const id = prompt("삭제할 학생의 ID를 입력하세요:");
+                        document.getElementById(id)
+                        .value;
                 if (id) {
                     const xhr = new XMLHttpRequest();
                     xhr.open("DELETE", `${url}/${id}`);
@@ -287,17 +289,11 @@
                             alert("학생 데이터가 삭제되었습니다!");
                             getStudents();
                         } else {
-                            alert(`삭제 실패: ${xhr.status} - ${xhr.statusText}`);
-                            console.log(xhr.status, xhr.statusText);
+                          console.log(xhr.status, xhr.statusText);
                         }
                     }
-                    xhr.onerror = () => {
-                        alert("서버에 연결할 수 없습니다.");
-                    };
-                } else {
-                    alert("ID를 입력해주세요.");
+                  }
                 }
-            }
         </script>
     </body>
 </html>
